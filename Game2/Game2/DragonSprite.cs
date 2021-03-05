@@ -26,6 +26,8 @@ namespace Game2
 
         public Vector2 position = new Vector2(50, 180);
 
+        public bool poweredUp = false;
+
         private double animationTimer;
 
         private short animationFrame = 0;
@@ -39,7 +41,15 @@ namespace Game2
         /// <param name="content">The ContentManager to load with</param>
         public void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("flying_dragon-red");
+            if (poweredUp)
+            {
+                texture = content.Load<Texture2D>("flying_twin_headed_dragon-red");
+            }
+            else
+            {
+                texture = content.Load<Texture2D>("flying_dragon-red");
+            }
+            
             
         }
 
@@ -82,7 +92,7 @@ namespace Game2
 
                 }
             }
-            if (position.X <= 0)
+            if (position.X <= 0 && position.Y > 0)
             {
                 if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
                 if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
@@ -93,7 +103,29 @@ namespace Game2
 
                 }
             }
-            if ( position.Y <= 0)
+            if (position.X <= 0 && position.Y > 400)
+            {
+                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
+               
+
+                if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
+                {
+                    position += new Vector2(1, 0);
+
+                }
+            }
+            if (position.X <= 0 && position.Y <= 0)
+            {
+                
+                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+
+                if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
+                {
+                    position += new Vector2(1, 0);
+
+                }
+            }
+            if ( position.Y <= 0 && position.X > 0)
             {
                 
                 if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
@@ -108,7 +140,7 @@ namespace Game2
 
                 }
             }
-            if (position.Y >= 400)
+            if (position.Y >= 400 && position.X > 0)
             {
                 if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
                 

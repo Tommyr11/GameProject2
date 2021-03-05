@@ -16,6 +16,8 @@ namespace Game2
 
         private double animationTimer;
 
+        private bool flipped;
+
         private short animationFrame = 0;
         private int count = 0;
         public bool collision;
@@ -27,7 +29,7 @@ namespace Game2
         public SpellSprite()
         {
             
-            Position = new Vector2(800, random.Next(0, 400));
+            Position = new Vector2(800, random.Next(0, 380));
             
         }
 
@@ -58,10 +60,13 @@ namespace Game2
             }
             if (collision)
             {
+                flipped = true;
                 Position += new Vector2(2, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if(Position.X > 800)
                 {
                     collision = false;
+                    flipped = false;
+                    Position.Y = random.Next(0, 400);
                 }
             }
             bounds.X = Position.X ;
@@ -71,6 +76,7 @@ namespace Game2
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            float flip = 1.5f;
             animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
             if (animationTimer > .4)
             {
@@ -78,8 +84,12 @@ namespace Game2
                 if (animationFrame > 5) animationFrame = 0;
                 animationTimer -= .4;
             }
+            if (flipped)
+            {
+                flip = 4.5f;
+            }
             var source = new Rectangle(animationFrame * 95, 192, 95, 192);
-            spriteBatch.Draw(texture1, Position, source, Color.White, 1.5f,new Vector2(64,64),(float).5,SpriteEffects.None,0);
+            spriteBatch.Draw(texture1, Position, source, Color.White, flip,new Vector2(64,64),(float).5,SpriteEffects.None,0);
             count++;
             if (count == 3) count = 0;
             //spriteBatch.Draw(texture2, Position, source, Color.White);

@@ -17,6 +17,7 @@ namespace Game2
 
         private short animationFrame = 0;
 
+
         private BoundingRectangle bounds = new BoundingRectangle(new Vector2(144, 128), 144, 128);
         public FireballSprite()
         {
@@ -38,7 +39,7 @@ namespace Game2
         {
             if (position.X <= 800)
             {
-                position.X += position.X   * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position += new Vector2(1,0) * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             
 

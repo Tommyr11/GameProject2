@@ -14,6 +14,7 @@ namespace Game2
         private bool fireball = true;
         System.Timers.Timer t;
         private KeyboardState keyboardState;
+        private PowerupSprite powerup;
         private SpellSprite[] spells;
         private SpellSprite testSpell;
         private DragonSprite dragonSprite;
@@ -22,6 +23,7 @@ namespace Game2
         private int coinsLeft;
         private SoundEffect coinPickup;
         private Song backgroundMusic;
+        private bool poweredUp = false;
 
 
         public DragonsAscent()
@@ -45,6 +47,7 @@ namespace Game2
                 new SpellSprite(),
                 new SpellSprite()
             };
+            powerup = new PowerupSprite();
             dragonSprite = new DragonSprite();
             fireballSprite = new FireballSprite();
             base.Initialize();
@@ -59,9 +62,18 @@ namespace Game2
                 spell.LoadContent(Content,count);
                 count++;
             }
+            powerup.LoadContent(Content);
             dragonSprite.LoadContent(Content);
             fireballSprite.LoadContent(Content);
-            backgroundMusic = Content.Load<Song>("DragonsAscentTheme");
+            if (dragonSprite.poweredUp)
+            {
+                backgroundMusic = Content.Load<Song>("DragonsAscentTheme");
+            }
+            else
+            {
+                backgroundMusic = Content.Load<Song>("DragonsMenu");
+            }
+            
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
             // TODO: use this.Content to load your game content here
@@ -72,15 +84,16 @@ namespace Game2
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             keyboardState = Keyboard.GetState();
-            
 
 
+            dragonSprite.Update(gameTime);
+            fireballSprite.Update(gameTime);
+            powerup.Update(gameTime);
             // TODO: Add your update logic here
             foreach (SpellSprite spell in spells)
             {
                 spell.Update(gameTime);
-                dragonSprite.Update(gameTime);
-                fireballSprite.Update(gameTime);
+                
                 if (spell.Bounds.CollidesWith(dragonSprite.Bounds))
                 {
                     spell.collision = true;
@@ -89,13 +102,22 @@ namespace Game2
                     
                     
                 }
-               
+            }
+            if (powerup.Bounds.CollidesWith(dragonSprite.Bounds))
+            {
+                powerup.collision = true;
+                if (!poweredUp)
+                {
+                    dragonSprite.poweredUp = true;
+                    LoadContent();
+                }
+                poweredUp = true;
                 
             }
-            
-            
-            
-            
+
+
+
+
 
             // TODO: Add your update logic here
 
@@ -121,6 +143,7 @@ namespace Game2
                 fireballSprite.Draw(gameTime, spriteBatch);
                 if (fireballSprite.position.X > 700) fireball = false;
             }
+            powerup.Draw(gameTime, spriteBatch);
             dragonSprite.Draw(gameTime,spriteBatch);
             spriteBatch.End();
             // TODO: Add your drawing code here
