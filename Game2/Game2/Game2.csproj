@@ -22,6 +22,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="StateManagement\" />
-    <Folder Include="Screens\" />
   </ItemGroup>
 </Project>

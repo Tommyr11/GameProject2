@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Game2.StateManagement
 {
@@ -135,6 +136,7 @@ namespace Game2.StateManagement
                     ? ScreenState.TransitionOn
                     : ScreenState.Active;
             }
+            
         }
 
         /// <summary>

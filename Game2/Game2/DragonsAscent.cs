@@ -5,11 +5,60 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using Game2.StateManagement;
+using Game2.Screens;
 
 namespace Game2
 {
     public class DragonsAscent : Game
     {
+        private GraphicsDeviceManager _graphics;
+        private readonly ScreenManager _screenManager;
+
+        public DragonsAscent()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+
+            var screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
+
+            _screenManager = new ScreenManager(this);
+            Components.Add(_screenManager);
+
+            AddInitialScreens();
+        }
+
+        private void AddInitialScreens()
+        {
+            //_screenManager.AddScreen(new GameplayScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(), null);
+            
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        protected override void LoadContent() { }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component
+        }
+    }
+}
+        /*
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private bool fireball = true;
@@ -152,4 +201,4 @@ namespace Game2
             base.Draw(gameTime);
         }
     }
-}
+}*/

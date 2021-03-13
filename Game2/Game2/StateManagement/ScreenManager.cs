@@ -59,6 +59,7 @@ namespace Game2.StateManagement
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+            
             Font = _content.Load<SpriteFont>("menufont");
             BlankTexture = _content.Load<Texture2D>("blank");
 
