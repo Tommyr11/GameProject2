@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace Game2.Particle
 {
-    interface IParticleEmitter
+    public interface IParticleEmitter
     {
         public Vector2 Position { get; }
 

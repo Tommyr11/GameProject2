@@ -1,4 +1,5 @@
-﻿using Game2.StateManagement;
+﻿using Game2.Particle;
+using Game2.StateManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -9,16 +10,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-
+using Game2.Particle;
 namespace Game2.Screens
 {
-    public class GameplayScreen : GameScreen
+    public class GameplayScreen : GameScreen, IParticleEmitter
     {
         private ContentManager _content;
         private SpriteFont _gameFont;
 
         private Vector2 _playerPosition = new Vector2(100, 100);
         private Vector2 _enemyPosition = new Vector2(100, 100);
+
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
 
         private readonly Random _random = new Random();
 
@@ -88,11 +92,12 @@ namespace Game2.Screens
             {
                 backgroundMusic = _content.Load<Song>("DragonsMenu");
             }
-
+            
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
             Thread.Sleep(200);
 
+            
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
             // it should not try to catch up.
@@ -172,6 +177,8 @@ namespace Game2.Screens
                 poweredUp = true;
 
             }
+            Velocity = dragonSprite.position - Position;
+            Position = dragonSprite.position;
 
 
 

@@ -6,14 +6,20 @@ using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using Game2.StateManagement;
 using Game2.Screens;
+using Game2.Particle;
 
 namespace Game2
 {
-    public class DragonsAscent : Game
+    public class DragonsAscent : Game, IParticleEmitter
     {
+        public GameplayScreen gHelper;
         private GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
-
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+        MouseState priorMouse;
+        public FireballExplosionParticleSystem _explosion;
+        int count = 0;
         public DragonsAscent()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -26,6 +32,8 @@ namespace Game2
             _screenManager = new ScreenManager(this);
             Components.Add(_screenManager);
 
+            _explosion = new FireballExplosionParticleSystem(this, 20);
+            Components.Add(_explosion);
             AddInitialScreens();
         }
 
@@ -38,6 +46,8 @@ namespace Game2
 
         protected override void Initialize()
         {
+           
+            
             base.Initialize();
         }
 
@@ -47,7 +57,34 @@ namespace Game2
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            MouseState currentMouse = Mouse.GetState();
+            Vector2 mousePosition = new Vector2(50, 200);
+            Velocity = mousePosition - Position;
+            Position = mousePosition;
+            if (currentMouse.LeftButton == ButtonState.Pressed && priorMouse.LeftButton == ButtonState.Released)
+            {
+                _explosion.PlaceExplosion(mousePosition);
+            }
+            //var keyboardState = input.CurrentKeyboardStates[playerIndex];
+            //Velocity = dragonSprite.position - Position;
+            //Position = dragonSprite.position;
+            GameScreen[] temp = _screenManager.GetScreens();
+            bool ihelper = false;
+            
+            if (temp[0] is GameplayScreen)
+            {
+                ihelper = true;
+                
+            }
+            if (ihelper && count == 0)
+            {
+                FallingAshParticleSystem rain = new FallingAshParticleSystem(this, new Rectangle(0, -20, 1000, 10));
+                Components.Add(rain);
+                DragonSparksParticleSystem pixie = new DragonSparksParticleSystem(this, this);
+                Components.Add(pixie);
+                ihelper = false;
+                count++;
+            }
             base.Update(gameTime);
         }
 
