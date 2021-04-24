@@ -13,7 +13,7 @@ namespace Game2.Screens
     {
         private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private int _selectedEntry;
-        private readonly string _menuTitle;
+        public  string _menuTitle;
 
         private readonly InputAction _menuUp;
         private readonly InputAction _menuDown;
@@ -25,7 +25,7 @@ namespace Game2.Screens
 
         protected MenuScreen(string menuTitle)
         {
-            _menuTitle = "Dragon's Ascent";
+            _menuTitle = menuTitle;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -161,7 +161,7 @@ namespace Game2.Screens
             // Draw the menu title centered on the screen
             var titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
             var titleOrigin = font.MeasureString(_menuTitle) / 2;
-            var titleColor = new Color(192, 192, 192) * TransitionAlpha;
+            var titleColor = Color.Red * TransitionAlpha;
             const float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;

@@ -39,7 +39,7 @@ namespace Game2
 
         private void AddInitialScreens()
         {
-            //_screenManager.AddScreen(new GameplayScreen(), null);
+            _screenManager.AddScreen(new BackgroundScreen(), null);
             _screenManager.AddScreen(new MainMenuScreen(), null);
             
         }
@@ -90,7 +90,7 @@ namespace Game2
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkMagenta);
             base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component
         }
     }

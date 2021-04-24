@@ -32,7 +32,7 @@ namespace Game2
 
         private short animationFrame = 0;
 
-        private BoundingRectangle bounds = new BoundingRectangle(new Vector2(144,80), 144, 80);
+        private BoundingRectangle bounds = new BoundingRectangle(new Vector2(144,70), 144, 100);
         public BoundingRectangle Bounds => bounds;
 
         /// <summary>
@@ -69,93 +69,202 @@ namespace Game2
             // Apply keyboard movement
             if (position.Y > 0 && position.Y < 400 && position.X > 0 && position.X < 800)
             {
-                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
-                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+                {
+                    position += new Vector2(0, -1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, -2);
+                    }
+                }
+                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+                {
+                    position += new Vector2(0, 1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, 2);
+                    }
+                }
                 if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
                 {
                     position += new Vector2(-1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(-2, 0);
+                    }
 
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 {
                     position += new Vector2(1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(2, 0);
+                    }
 
                 }
             }
             if (position.X >= 800)
             {
-                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
-                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+                {
+                    position += new Vector2(0, -1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, -2);
+                    }
+                }
+                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+                {
+                    position += new Vector2(0, 1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, 2);
+                    }
+                }
                 if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
                 {
                     position += new Vector2(-1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(-2, 0);
+                    }
 
                 }
             }
             if (position.X <= 0 && position.Y > 0)
             {
-                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
-                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+                {
+                    position += new Vector2(0, -1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, -2);
+                    }
+                }
+                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+                {
+                    position += new Vector2(0, 1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, 2);
+                    }
+                }
                
                 if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 {
                     position += new Vector2(1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(2, 0);
+                    }
 
                 }
             }
             if (position.X <= 0 && position.Y > 400)
             {
-                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
+                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+                {
+                    position += new Vector2(0, -1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, -2);
+                    }
+                }
                
 
                 if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 {
                     position += new Vector2(1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(2, 0);
+                    }
 
                 }
             }
             if (position.X <= 0 && position.Y <= 0)
             {
-                
-                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+
+                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+                {
+                    position += new Vector2(0, 1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, 2);
+                    }
+                }
 
                 if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 {
                     position += new Vector2(1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(2, 0);
+                    }
 
                 }
             }
             if ( position.Y <= 0 && position.X > 0)
             {
-                
-                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+
+                if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+                {
+                    position += new Vector2(0, 1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, -2);
+                    }
+                }
                 if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
                 {
                     position += new Vector2(-1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(-2, 0);
+                    }
 
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 {
                     position += new Vector2(1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(2, 0);
+                    }
 
                 }
             }
             if (position.Y >= 400 && position.X > 0)
             {
-                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
+                if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+                {
+                    position += new Vector2(0, -1);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(0, -2);
+                    }
+                }
                 
                 if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
                 {
                     position += new Vector2(-1, 0);
+                    if (poweredUp)
+                    {
+                        position += new Vector2(-2, 0);
+                    }
 
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 {
                     position += new Vector2(1, 0);
-
+                    if (poweredUp)
+                    {
+                        position += new Vector2(2, 0);
+                    }
                 }
             }
-
+            
 
             bounds.X = position.X;
             bounds.Y = position.Y;

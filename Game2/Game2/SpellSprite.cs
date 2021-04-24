@@ -15,21 +15,22 @@ namespace Game2
         public Texture2D Texture => texture1;
 
         private double animationTimer;
-
+        public bool notAdded = false;
         private bool flipped;
-
+        public int scoreCount;
         private short animationFrame = 0;
         private int count = 0;
         public bool collision;
-
+        public int score;
         public Vector2 Position;
         System.Random random = new Random();
         private BoundingRectangle bounds;
         public BoundingRectangle Bounds => bounds;
+        private int divisor = 1;
         public SpellSprite()
         {
             
-            Position = new Vector2(800, random.Next(0, 350));
+            Position = new Vector2(800, random.Next(80, 400));
             
         }
 
@@ -56,17 +57,28 @@ namespace Game2
             else
             {
                 Position.X = 800;
-                Position.Y = random.Next(0, 350);
+                Position.Y = random.Next(80, 400);
+                if (scoreCount == 0)
+                {
+                    score += 100;
+                    notAdded = true;
+                    scoreCount += 1;
+                    divisor += 1;
+                }
+
+                scoreCount = 0;
             }
             if (collision)
             {
                 flipped = true;
                 Position += new Vector2(2, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+               
                 if(Position.X > 800)
                 {
                     collision = false;
                     flipped = false;
-                    Position.Y = random.Next(0, 350);
+                    Position.Y = random.Next(80, 400);
+                    
                 }
             }
             bounds.X = Position.X ;

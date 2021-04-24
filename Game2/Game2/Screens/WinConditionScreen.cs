@@ -4,20 +4,20 @@ using System.Text;
 
 namespace Game2.Screens
 {
-    public class LoseConditionScreen: MenuScreen
+    public class WinConditionScreen : MenuScreen
     {
-        public LoseConditionScreen() : base("Paused")
+        public WinConditionScreen() : base("Paused")
         {
-            _menuTitle = "You Lose";
+            _menuTitle = "You Won!";
             var restartGameMenuEntry = new MenuEntry("Restart Game");
             var quitGameMenuEntry = new MenuEntry("Quit Game");
 
 
-            
+
             restartGameMenuEntry.Selected += Restart;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
 
-            
+
             MenuEntries.Add(restartGameMenuEntry);
             MenuEntries.Add(quitGameMenuEntry);
         }

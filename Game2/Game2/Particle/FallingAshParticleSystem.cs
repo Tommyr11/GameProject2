@@ -17,8 +17,8 @@ namespace Game2.Particle
         protected override void InitializeConstants()
         {
             textureFilename = "drop";
-            minNumParticles = 10;
-            maxNumParticles = 20;
+            minNumParticles = 5;
+            maxNumParticles = 10;
         }
         protected override void InitializeParticle(ref Particle p, Vector2 where)
         {

@@ -32,7 +32,7 @@ namespace Game2.Screens
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _backgroundTexture = _content.Load<Texture2D>("background");
+            _backgroundTexture = _content.Load<Texture2D>("castle");
         }
 
         public override void Unload()
@@ -58,8 +58,8 @@ namespace Game2.Screens
             spriteBatch.Begin();
 
             spriteBatch.Draw(_backgroundTexture, fullscreen,
-                new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
-
+                Color.White);
+            //new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha)
             spriteBatch.End();
         }
     }

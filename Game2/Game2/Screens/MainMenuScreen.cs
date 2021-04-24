@@ -13,19 +13,21 @@ namespace Game2.Screens
 
         public MainMenuScreen() : base("Main Menu")
         {
-            var playGameMenuEntry = new MenuEntry("Play Game");
-            var optionsMenuEntry = new MenuEntry("Options");
-            var exitMenuEntry = new MenuEntry("Exit");
-            var Instructions = new MenuEntry("Instructions");
+            _menuTitle = "Dragon's Ascent";
+            var string1 = new MenuEntry("Play Game");
+            var string2 = new MenuEntry("Options");
+            var string3 = new MenuEntry("Instructions");
+            var string4 = new MenuEntry("Exit");
 
-            playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
-            optionsMenuEntry.Selected += OptionsMenuEntrySelected;
-            exitMenuEntry.Selected += OnCancel;
+            string1.Selected += PlayGameMenuEntrySelected;
+            string2.Selected += OptionsMenuEntrySelected;
+            string3.Selected += InstructionsMenuEntrySelected;
+            string4.Selected += OnCancel;
 
-            MenuEntries.Add(playGameMenuEntry);
-            MenuEntries.Add(optionsMenuEntry);
-            MenuEntries.Add(exitMenuEntry);
-            MenuEntries.Add(Instructions);
+            MenuEntries.Add(string1);
+            MenuEntries.Add(string2);
+            MenuEntries.Add(string3);
+            MenuEntries.Add(string4);
         }
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
@@ -40,7 +42,7 @@ namespace Game2.Screens
         }
         private void InstructionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new InstructionScreen(), e.PlayerIndex);
         }
 
         protected override void OnCancel(PlayerIndex playerIndex)

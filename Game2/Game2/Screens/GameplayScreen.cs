@@ -20,9 +20,11 @@ namespace Game2.Screens
         private Vector2 _playerPosition = new Vector2(100, 100);
         private Vector2 _enemyPosition = new Vector2(100, 100);
 
+        private bool won = false;
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
 
+        public int score;
         private readonly Random _random = new Random();
 
         private float _pauseAlpha;
@@ -41,8 +43,10 @@ namespace Game2.Screens
         private FireballSprite fireballSprite;
         private SpriteFont spriteFont;
         private int coinsLeft;
-        private SoundEffect coinPickup;
+        private SoundEffect Collision;
+        private SoundEffect Lose;
         private Song backgroundMusic;
+        private Song WinMusic;
         private bool poweredUp = false;
 
 
@@ -93,7 +97,9 @@ namespace Game2.Screens
             {
                 backgroundMusic = _content.Load<Song>("DragonsMenu");
             }
-            
+            Lose = _content.Load<SoundEffect>("ExplosionLoss");
+            WinMusic = _content.Load<Song>("HouseSong");
+            Collision = _content.Load<SoundEffect>("Collision");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
             Thread.Sleep(200);
@@ -156,12 +162,20 @@ namespace Game2.Screens
             // TODO: Add your update logic here
             foreach (SpellSprite spell in spells)
             {
+                
                 spell.Update(gameTime);
-
-                if (spell.Bounds.CollidesWith(dragonSprite.Bounds))
+                if (spell.notAdded)
+                {
+                    score += spell.score;
+                    spell.notAdded = false;
+                }
+                    
+                
+                
+                if (spell.Bounds.CollidesWith(dragonSprite.Bounds) && spell.collision == false)
                 {
                     spell.collision = true;
-
+                    Collision.Play();
                     dragonSprite.dragonLives--;
 
 
@@ -173,6 +187,7 @@ namespace Game2.Screens
                 if (!poweredUp)
                 {
                     dragonSprite.poweredUp = true;
+                    score += 500;
                     Activate();
                 }
                 poweredUp = true;
@@ -185,13 +200,21 @@ namespace Game2.Screens
                 //this.Deactivate();
                 LoseConditionHelper();
                 dragonSprite.dragonLives = 3;
+                Lose.Play();
 
+            }
+            if(score >= 3000 && won == false)
+            {
+                WinConditionHelper();
+                MediaPlayer.Play(WinMusic);
+                score = 0;
+                won = true;
             }
 
 
 
 
-            // TODO: Add your update logic here
+            
 
 
         }
@@ -199,6 +222,10 @@ namespace Game2.Screens
         public void LoseConditionHelper()
         {
             ScreenManager.AddScreen(new LoseConditionScreen(), ControllingPlayer);
+        }
+        public void WinConditionHelper()
+        {
+            ScreenManager.AddScreen(new WinConditionScreen(), ControllingPlayer);
         }
         // Unlike the Update method, this will only be called when the gameplay screen is active.
         public override void HandleInput(GameTime gameTime, InputState input)
@@ -262,8 +289,9 @@ namespace Game2.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
             var font = ScreenManager.Font;
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Avoid the Fireballs and collect the powerup!!!", new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font, $"Lives Left: {dragonSprite.dragonLives}", new Vector2(0, 50), Color.White);
+            
+            spriteBatch.DrawString(font, $"Lives Left: {dragonSprite.dragonLives}", new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font, $"Score: {score}", new Vector2(350, 0), Color.White);
             foreach (SpellSprite spell in spells)
             {
                 spell.Draw(gameTime, spriteBatch);
