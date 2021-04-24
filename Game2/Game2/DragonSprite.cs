@@ -32,7 +32,7 @@ namespace Game2
 
         private short animationFrame = 0;
 
-        private BoundingRectangle bounds = new BoundingRectangle(new Vector2(144,128), 144, 128);
+        private BoundingRectangle bounds = new BoundingRectangle(new Vector2(144,80), 144, 80);
         public BoundingRectangle Bounds => bounds;
 
         /// <summary>

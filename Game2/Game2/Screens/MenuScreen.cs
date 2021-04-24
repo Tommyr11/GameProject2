@@ -25,7 +25,7 @@ namespace Game2.Screens
 
         protected MenuScreen(string menuTitle)
         {
-            _menuTitle = menuTitle;
+            _menuTitle = "Dragon's Ascent";
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);

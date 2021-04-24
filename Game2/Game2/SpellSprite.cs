@@ -29,7 +29,7 @@ namespace Game2
         public SpellSprite()
         {
             
-            Position = new Vector2(800, random.Next(0, 380));
+            Position = new Vector2(800, random.Next(0, 350));
             
         }
 
@@ -51,12 +51,12 @@ namespace Game2
         {
             if(Position.X >= 30)
             {
-                Position += new Vector2(-1, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Position += new Vector2(-1, 0) * 150 * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             else
             {
                 Position.X = 800;
-                Position.Y = random.Next(0, 400);
+                Position.Y = random.Next(0, 350);
             }
             if (collision)
             {
@@ -66,7 +66,7 @@ namespace Game2
                 {
                     collision = false;
                     flipped = false;
-                    Position.Y = random.Next(0, 400);
+                    Position.Y = random.Next(0, 350);
                 }
             }
             bounds.X = Position.X ;

@@ -16,6 +16,7 @@ namespace Game2.Screens
             var playGameMenuEntry = new MenuEntry("Play Game");
             var optionsMenuEntry = new MenuEntry("Options");
             var exitMenuEntry = new MenuEntry("Exit");
+            var Instructions = new MenuEntry("Instructions");
 
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
@@ -24,6 +25,7 @@ namespace Game2.Screens
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
+            MenuEntries.Add(Instructions);
         }
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
@@ -33,6 +35,10 @@ namespace Game2.Screens
 
 
         private void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
+        }
+        private void InstructionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
         }

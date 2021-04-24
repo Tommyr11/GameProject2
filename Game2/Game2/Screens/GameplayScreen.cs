@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using Game2.Particle;
 namespace Game2.Screens
 {
     public class GameplayScreen : GameScreen, IParticleEmitter
@@ -36,6 +35,7 @@ namespace Game2.Screens
         private KeyboardState keyboardState;
         private PowerupSprite powerup;
         private SpellSprite[] spells;
+        private HeartSprite lives = new HeartSprite();
         private SpellSprite testSpell;
         private DragonSprite dragonSprite;
         private FireballSprite fireballSprite;
@@ -81,6 +81,7 @@ namespace Game2.Screens
                 spell.LoadContent(_content, count);
                 count++;
             }
+            lives.LoadContent(_content);
             powerup.LoadContent(_content);
             dragonSprite.LoadContent(_content);
             fireballSprite.LoadContent(_content);
@@ -179,7 +180,13 @@ namespace Game2.Screens
             }
             Velocity = dragonSprite.position - Position;
             Position = dragonSprite.position;
+            if(dragonSprite.dragonLives == 0)
+            {
+                //this.Deactivate();
+                LoseConditionHelper();
+                dragonSprite.dragonLives = 3;
 
+            }
 
 
 
@@ -189,6 +196,10 @@ namespace Game2.Screens
 
         }
 
+        public void LoseConditionHelper()
+        {
+            ScreenManager.AddScreen(new LoseConditionScreen(), ControllingPlayer);
+        }
         // Unlike the Update method, this will only be called when the gameplay screen is active.
         public override void HandleInput(GameTime gameTime, InputState input)
         {
@@ -211,6 +222,7 @@ namespace Game2.Screens
             if (_pauseAction.Occurred(input, ControllingPlayer, out player) || gamePadDisconnected)
             {
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+                
             }
             else
             {
@@ -248,9 +260,10 @@ namespace Game2.Screens
 
             // Our player and enemy are both actually just text strings.
             var spriteBatch = ScreenManager.SpriteBatch;
-
+            var font = ScreenManager.Font;
             spriteBatch.Begin();
-
+            spriteBatch.DrawString(font, "Avoid the Fireballs and collect the powerup!!!", new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font, $"Lives Left: {dragonSprite.dragonLives}", new Vector2(0, 50), Color.White);
             foreach (SpellSprite spell in spells)
             {
                 spell.Draw(gameTime, spriteBatch);
@@ -268,7 +281,14 @@ namespace Game2.Screens
             }
             powerup.Draw(gameTime, spriteBatch);
             dragonSprite.Draw(gameTime, spriteBatch);
-
+            int temp = dragonSprite.dragonLives;
+            Vector2 temppos = new Vector2(520, 0);
+            while(temp != 0)
+            {
+                lives.Draw(gameTime,spriteBatch,temppos);
+                temppos.X += 80;
+                temp -= 1;
+            }
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.

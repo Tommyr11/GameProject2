@@ -32,8 +32,8 @@ namespace Game2
             _screenManager = new ScreenManager(this);
             Components.Add(_screenManager);
 
-            _explosion = new FireballExplosionParticleSystem(this, 20);
-            Components.Add(_explosion);
+            //_explosion = new FireballExplosionParticleSystem(this, 20);
+            //Components.Add(_explosion);
             AddInitialScreens();
         }
 
@@ -63,7 +63,7 @@ namespace Game2
             Position = mousePosition;
             if (currentMouse.LeftButton == ButtonState.Pressed && priorMouse.LeftButton == ButtonState.Released)
             {
-                _explosion.PlaceExplosion(mousePosition);
+               // _explosion.PlaceExplosion(mousePosition);
             }
             //var keyboardState = input.CurrentKeyboardStates[playerIndex];
             //Velocity = dragonSprite.position - Position;
@@ -81,7 +81,7 @@ namespace Game2
                 FallingAshParticleSystem rain = new FallingAshParticleSystem(this, new Rectangle(0, -20, 1000, 10));
                 Components.Add(rain);
                 DragonSparksParticleSystem pixie = new DragonSparksParticleSystem(this, this);
-                Components.Add(pixie);
+                //Components.Add(pixie);
                 ihelper = false;
                 count++;
             }

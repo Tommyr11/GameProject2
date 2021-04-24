@@ -22,7 +22,7 @@ namespace Game2.Particle
         }
         protected override void InitializeParticle(ref Particle p, Vector2 where)
         {
-            p.Initialize(where, Vector2.UnitY * 200, Vector2.Zero, Color.Black, scale: RandomHelper.NextFloat(0.1f, 0.4f), lifetime: 3);
+            p.Initialize(where, Vector2.UnitY * 200, Vector2.Zero, Color.DimGray, scale: RandomHelper.NextFloat(0.1f, 0.4f), lifetime: 3);
         }
         public override void Update(GameTime gameTime)
         {
