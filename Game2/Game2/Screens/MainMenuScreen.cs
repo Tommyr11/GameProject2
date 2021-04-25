@@ -15,17 +15,17 @@ namespace Game2.Screens
         {
             _menuTitle = "Dragon's Ascent";
             var string1 = new MenuEntry("Play Game");
-            var string2 = new MenuEntry("Options");
+           // var string2 = new MenuEntry("Options");
             var string3 = new MenuEntry("Instructions");
             var string4 = new MenuEntry("Exit");
 
             string1.Selected += PlayGameMenuEntrySelected;
-            string2.Selected += OptionsMenuEntrySelected;
+            //string2.Selected += OptionsMenuEntrySelected;
             string3.Selected += InstructionsMenuEntrySelected;
             string4.Selected += OnCancel;
 
             MenuEntries.Add(string1);
-            MenuEntries.Add(string2);
+            //MenuEntries.Add(string2);
             MenuEntries.Add(string3);
             MenuEntries.Add(string4);
         }
