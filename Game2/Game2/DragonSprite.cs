@@ -213,7 +213,7 @@ namespace Game2
                     position += new Vector2(0, 1);
                     if (poweredUp)
                     {
-                        position += new Vector2(0, -2);
+                        position += new Vector2(0, 2);
                     }
                 }
                 if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
