@@ -28,8 +28,8 @@ namespace Game2.Particle
 
 
             var lifetime = RandomHelper.NextFloat(.1f, .6f);
-            var acceleration = Vector2.UnitY * 400;
-            var scale = RandomHelper.NextFloat(.1f, .5f);
+            var acceleration = Vector2.UnitY * 1500;
+            var scale = RandomHelper.NextFloat(.1f, .3f);
 
             var rotation = RandomHelper.NextFloat(0, MathHelper.TwoPi);
 

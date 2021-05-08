@@ -33,7 +33,7 @@ namespace Game2.Screens
             var confirmQuitMessageBox = new MessageBoxScreen(message);
 
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
-
+            
             ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
         }
 

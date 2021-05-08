@@ -76,21 +76,13 @@ namespace Game2
                 ihelper = true;
                 
             }
-            if (ihelper && count == 0)
-            {
-                FallingAshParticleSystem rain = new FallingAshParticleSystem(this, new Rectangle(0, -20, 1000, 10));
-                Components.Add(rain);
-                DragonSparksParticleSystem pixie = new DragonSparksParticleSystem(this, this);
-                //Components.Add(pixie);
-                ihelper = false;
-                count++;
-            }
+           
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkMagenta);
+            GraphicsDevice.Clear(Color.Black);
             base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component
         }
     }

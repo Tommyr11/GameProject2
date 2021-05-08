@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Timers;
+
 namespace Game2.Screens
 {
     public class GameplayScreen : GameScreen, IParticleEmitter
@@ -21,6 +23,8 @@ namespace Game2.Screens
         private Vector2 _enemyPosition = new Vector2(100, 100);
 
         private bool won = false;
+        private bool ihelper = true;
+        private bool lost = false;
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
 
@@ -29,7 +33,9 @@ namespace Game2.Screens
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
-        
+
+        FallingAshParticleSystem rain;
+        DragonSparksParticleSystem pixie;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private bool fireball = true;
@@ -52,6 +58,8 @@ namespace Game2.Screens
 
         public GameplayScreen()
         {
+            
+            
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -126,107 +134,131 @@ namespace Game2.Screens
         // stop updating when the pause menu is active, or if you tab away to a different application.
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            base.Update(gameTime, otherScreenHasFocus, false);
-
-            // Gradually fade in or out depending on whether we are covered by the pause screen.
-            if (coveredByOtherScreen)
-                _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
-            else
-                _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
-
-            if (IsActive)
+            if(ScreenManager.Game.IsActive && !lost)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
-
-                _enemyPosition.X += (float)(_random.NextDouble() - 0.5) * randomization;
-                _enemyPosition.Y += (float)(_random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                var targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - _gameFont.MeasureString("Insert Gameplay Here").X / 2,
-                    200);
-
-                _enemyPosition = Vector2.Lerp(_enemyPosition, targetPosition, 0.05f);
-
-                // This game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
-            }
-            
-            keyboardState = Keyboard.GetState();
-
-
-            dragonSprite.Update(gameTime);
-            fireballSprite.Update(gameTime);
-            powerup.Update(gameTime);
-            // TODO: Add your update logic here
-            foreach (SpellSprite spell in spells)
-            {
+                base.Update(gameTime, otherScreenHasFocus, false);
                 
-                spell.Update(gameTime);
-                if (spell.notAdded)
+                if (ihelper)
                 {
-                    score += spell.score;
-                    spell.notAdded = false;
-                }
+                    rain = new FallingAshParticleSystem(ScreenManager.Game, new Rectangle(0, -20, 1000, 10));
+                    ScreenManager.Game.Components.Add(rain);
                     
+
+                    ihelper = false;
+                    
+                }
+                int count = 0;
                 
                 
-                if (spell.Bounds.CollidesWith(dragonSprite.Bounds) && spell.collision == false)
-                {
-                    spell.collision = true;
-                    Collision.Play();
-                    dragonSprite.dragonLives--;
+                // Gradually fade in or out depending on whether we are covered by the pause screen.
+                if (coveredByOtherScreen)
+                    _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
+                else
+                    _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
 
+                if (IsActive)
+                {
+                    // Apply some random jitter to make the enemy move around.
+                    const float randomization = 10;
+
+                    _enemyPosition.X += (float)(_random.NextDouble() - 0.5) * randomization;
+                    _enemyPosition.Y += (float)(_random.NextDouble() - 0.5) * randomization;
+
+                    // Apply a stabilizing force to stop the enemy moving off the screen.
+                    var targetPosition = new Vector2(
+                        ScreenManager.GraphicsDevice.Viewport.Width / 2 - _gameFont.MeasureString("Insert Gameplay Here").X / 2,
+                        200);
+
+                    _enemyPosition = Vector2.Lerp(_enemyPosition, targetPosition, 0.05f);
+
+                    // This game isn't very fun! You could probably improve
+                    // it by inserting something more interesting in this space :-)
+                }
+
+                keyboardState = Keyboard.GetState();
+
+
+                dragonSprite.Update(gameTime);
+                fireballSprite.Update(gameTime);
+                powerup.Update(gameTime);
+                // TODO: Add your update logic here
+                foreach (SpellSprite spell in spells)
+                {
+
+                    spell.Update(gameTime);
+                    if (spell.notAdded)
+                    {
+                        score += spell.score;
+                        spell.notAdded = false;
+                    }
+
+
+
+                    if (spell.Bounds.CollidesWith(dragonSprite.Bounds) && spell.collision == false)
+                    {
+                        spell.collision = true;
+                        Collision.Play();
+                        dragonSprite.dragonLives--;
+
+
+                    }
+                }
+                if (powerup.Bounds.CollidesWith(dragonSprite.Bounds))
+                {
+                    powerup.collision = true;
+                    if (!poweredUp)
+                    {
+                        dragonSprite.poweredUp = true;
+                        score += 500;
+                        Activate();
+                    }
+                    poweredUp = true;
 
                 }
-            }
-            if (powerup.Bounds.CollidesWith(dragonSprite.Bounds))
-            {
-                powerup.collision = true;
-                if (!poweredUp)
+                Velocity = dragonSprite.position - Position;
+                Position = dragonSprite.position + new Vector2(150,67);
+                if (dragonSprite.dragonLives == 0)
                 {
-                    dragonSprite.poweredUp = true;
-                    score += 500;
-                    Activate();
+                    //this.Deactivate();
+                    LoseConditionHelper();
+                    dragonSprite.dragonLives = 3;
+                    MediaPlayer.Stop();
+                    Lose.Play();
+
                 }
-                poweredUp = true;
-
+                if (score >= 3000 && won == false)
+                {
+                    
+                    MediaPlayer.Play(WinMusic);
+                    WinConditionHelper();
+                    score = 0;
+                    won = true;
+                }
             }
-            Velocity = dragonSprite.position - Position;
-            Position = dragonSprite.position;
-            if(dragonSprite.dragonLives == 0)
-            {
-                //this.Deactivate();
-                LoseConditionHelper();
-                dragonSprite.dragonLives = 3;
-                Lose.Play();
-
-            }
-            if(score >= 3000 && won == false)
-            {
-                WinConditionHelper();
-                MediaPlayer.Play(WinMusic);
-                score = 0;
-                won = true;
-            }
-
-
-
-
-            
-
-
+    
         }
 
         public void LoseConditionHelper()
         {
+            this.Deactivate();
+            lost = true;
+            ScreenManager.Game.Components.Remove(rain);
+            ScreenManager.Game.Components.Remove(pixie);
+            ScreenManager.RemoveScreen(this);
             ScreenManager.AddScreen(new LoseConditionScreen(), ControllingPlayer);
+            
         }
         public void WinConditionHelper()
         {
+            this.Deactivate();
+            lost = true;
+            ScreenManager.Game.Components.Remove(rain);
+            ScreenManager.Game.Components.Remove(pixie);
+            ScreenManager.RemoveScreen(this);
             ScreenManager.AddScreen(new WinConditionScreen(), ControllingPlayer);
+            MediaPlayer.Stop();
         }
+        
         // Unlike the Update method, this will only be called when the gameplay screen is active.
         public override void HandleInput(GameTime gameTime, InputState input)
         {
@@ -282,50 +314,52 @@ namespace Game2.Screens
 
         public override void Draw(GameTime gameTime)
         {
-            // This game has a blue background. Why? Because!
-            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.DarkMagenta, 0, 0);
-
-            // Our player and enemy are both actually just text strings.
-            var spriteBatch = ScreenManager.SpriteBatch;
-            var font = ScreenManager.Font;
-            spriteBatch.Begin();
             
-            spriteBatch.DrawString(font, $"Lives Left: {dragonSprite.dragonLives}", new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font, $"Score: {score}", new Vector2(350, 0), Color.White);
-            foreach (SpellSprite spell in spells)
-            {
-                spell.Draw(gameTime, spriteBatch);
+                // This game has a blue background. Why? Because!
+                ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.DarkMagenta, 0, 0);
 
-            }
-            if (fireball)
-            {
+                // Our player and enemy are both actually just text strings.
+                var spriteBatch = ScreenManager.SpriteBatch;
+                var font = ScreenManager.Font;
+                spriteBatch.Begin();
 
-                fireballSprite.position.X = dragonSprite.position.X + 10;
-                fireballSprite.position.Y = dragonSprite.position.Y;
+                spriteBatch.DrawString(font, $"Lives Left: {dragonSprite.dragonLives}", new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(font, $"Score: {score}", new Vector2(350, 0), Color.White);
+                foreach (SpellSprite spell in spells)
+                {
+                    spell.Draw(gameTime, spriteBatch);
+
+                }
+                if (fireball)
+                {
+
+                    fireballSprite.position.X = dragonSprite.position.X + 10;
+                    fireballSprite.position.Y = dragonSprite.position.Y;
 
 
-                fireballSprite.Draw(gameTime, spriteBatch);
-                if (fireballSprite.position.X > 700) fireball = false;
-            }
-            powerup.Draw(gameTime, spriteBatch);
-            dragonSprite.Draw(gameTime, spriteBatch);
-            int temp = dragonSprite.dragonLives;
-            Vector2 temppos = new Vector2(520, 0);
-            while(temp != 0)
-            {
-                lives.Draw(gameTime,spriteBatch,temppos);
-                temppos.X += 80;
-                temp -= 1;
-            }
-            spriteBatch.End();
+                    fireballSprite.Draw(gameTime, spriteBatch);
+                    if (fireballSprite.position.X > 700) fireball = false;
+                }
+                powerup.Draw(gameTime, spriteBatch);
+                dragonSprite.Draw(gameTime, spriteBatch);
+                int temp = dragonSprite.dragonLives;
+                Vector2 temppos = new Vector2(520, 0);
+                while (temp != 0)
+                {
+                    lives.Draw(gameTime, spriteBatch, temppos);
+                    temppos.X += 80;
+                    temp -= 1;
+                }
+                spriteBatch.End();
 
-            // If the game is transitioning on or off, fade it out to black.
-            if (TransitionPosition > 0 || _pauseAlpha > 0)
-            {
-                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
+                // If the game is transitioning on or off, fade it out to black.
+                if (TransitionPosition > 0 || _pauseAlpha > 0)
+                {
+                    float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
 
-                ScreenManager.FadeBackBufferToBlack(alpha);
-            }
+                    ScreenManager.FadeBackBufferToBlack(alpha);
+                }
+            
         }
 
     }
